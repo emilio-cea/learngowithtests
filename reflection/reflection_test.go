@@ -20,6 +20,14 @@ func TestWalk(t *testing.T) {
 			[]string{"Chris"},
 		},
 		{
+			"struct with non string field",
+			struct {
+				Name string
+				Age  int
+			}{"Chris", 33},
+			[]string{"Chris"},
+		},
+		{
 			"struct with two string fields",
 			struct {
 				Name string
@@ -48,6 +56,9 @@ func walk(x interface{}, fn func(input string)) {
 
 	for i := 0; i < val.NumField(); i++ {
 		field := val.Field(i)
-		fn(field.String())
+
+		if field.Kind() == reflect.String {
+			fn(field.String())
+		}
 	}
 }
