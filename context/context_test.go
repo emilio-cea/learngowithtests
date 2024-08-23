@@ -18,6 +18,7 @@ type SpyResponseWriter struct {
 	written bool
 }
 
+// need to implement these 3 methods because the response from httptest.NewRecorder doesn't hae a way to store them
 func (s *SpyResponseWriter) Header() http.Header {
 	s.written = true
 	return nil
