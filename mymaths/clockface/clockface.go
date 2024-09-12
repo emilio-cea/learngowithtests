@@ -1,6 +1,8 @@
 package clockface
 
 import (
+	"fmt"
+	"io"
 	"math"
 	"time"
 )
@@ -20,12 +22,31 @@ func SecondHand(t time.Time) Point {
 	p = Point{p.X + clockCentreX, p.Y + clockCentreY} //translate
 	return p
 }
-func secondHandPoint(t time.Time) Point {
-	angle := secondsInRadians(t)
-	x := math.Sin(angle)
-	y := math.Cos(angle)
 
-	return Point{x, y}
+const minuteHandLength = 80
+
+//...
+
+func secondHand(w io.Writer, t time.Time) {
+	p := makeHand(secondHandPoint(t), secondHandLength)
+	fmt.Fprintf(w, `<line x1="150" y1="150" x2="%.3f" y2="%.3f" style="fill:none;stroke:#f00;stroke-width:3px;"/>`, p.X, p.Y)
+}
+
+func minuteHand(w io.Writer, t time.Time) {
+	p := makeHand(minuteHandPoint(t), minuteHandLength)
+	fmt.Fprintf(w, `<line x1="150" y1="150" x2="%.3f" y2="%.3f" style="fill:none;stroke:#000;stroke-width:3px;"/>`, p.X, p.Y)
+}
+
+func makeHand(p Point, length float64) Point {
+	p = Point{p.X * length, p.Y * length}
+	p = Point{p.X, -p.Y}
+	return Point{p.X + clockCentreX, p.Y + clockCentreY}
+}
+func secondHandPoint(t time.Time) Point {
+	return angleToPoint(secondsInRadians(t))
+}
+func minuteHandPoint(t time.Time) Point {
+	return angleToPoint(minutesInRadians(t))
 }
 func secondsInRadians(t time.Time) float64 {
 	return (math.Pi / (30 / (float64(t.Second()))))
@@ -33,4 +54,10 @@ func secondsInRadians(t time.Time) float64 {
 func minutesInRadians(t time.Time) float64 {
 	return (secondsInRadians(t) / 60) +
 		(math.Pi / (30 / float64(t.Minute())))
+}
+func angleToPoint(angle float64) Point {
+	x := math.Sin(angle)
+	y := math.Cos(angle)
+
+	return Point{x, y}
 }
