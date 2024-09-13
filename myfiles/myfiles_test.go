@@ -38,13 +38,8 @@ Description: Description 2`
 		t.Fatal(err)
 	}
 
-	got := posts[0]
-	want := blogposts.Post{Title: "Post 1"}
 	assertPost(t, posts[0], blogposts.Post{Title: "Post 1", Description: "Description 1"})
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("got %+v, want %+v", got, want)
-	}
 	if len(posts) != len(fs) {
 		t.Errorf("got %d posts, wanted %d posts", len(posts), len(fs))
 	}
