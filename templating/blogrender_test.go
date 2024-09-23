@@ -1,6 +1,7 @@
 package blogrenderer_test
 
 import (
+	blogrenderer "blogrender"
 	"bytes"
 	"testing"
 )
@@ -9,7 +10,7 @@ func TestRender(t *testing.T) {
 	// import Post from a parent directory
 
 	var (
-		aPost = Post{
+		aPost = blogrenderer.Post{
 			Title:       "hello world",
 			Body:        "This is a post",
 			Description: "This is a description",
@@ -19,7 +20,7 @@ func TestRender(t *testing.T) {
 
 	t.Run("it converts a single post into HTML", func(t *testing.T) {
 		buf := bytes.Buffer{}
-		err := Render(&buf, aPost)
+		err := blogrenderer.Render(&buf, aPost)
 
 		if err != nil {
 			t.Fatal(err)
